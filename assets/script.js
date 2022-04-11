@@ -121,3 +121,41 @@ myDaySchedule.forEach(function(thisHour) {
     savePlans.append(saveButton);
     hourBlockRow.append(hourField, hourlyPlan, savePlans);
 })
+
+// This function saves data to the localStorage
+function saveReminders() {
+    localStorage.setItem("myDaySchedule", JSON.stringify(myDaySchedule));
+}
+
+
+//This function allows any data in the localStorage to the view
+function displayDailyReminders() {
+    myDaySchedule.forEach(function (_thisHour) {
+        $(`#${_thisHour.id}`).val(_thisHour.reminder);
+    })
+}
+
+// sets any existing localStorage data to the view if it exists
+function existingData() {
+    var storedDay = JSON.parse(localStorage.getItem("myDaySchedule"));
+
+    if (storedDay) {
+        myDaySchedule = storedDay;
+    }
+
+    saveReminders();
+    displayDailyReminders();
+}
+
+// shows any existing localstorage data
+existingData();
+
+// saves data to be used in localStorage
+$(".saveBtn").on("click", function(event) {
+    event.preventDefault();
+    var saveIndex = $(this).siblings(".description").children(".future").attr("id");
+    myDaySchedule[saveIndex].reminder = $(this).siblings(".description").children(".future").val();
+    console.log(saveIndex);
+    saveReminders();
+    displayDailyReminders();
+})
